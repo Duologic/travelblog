@@ -41,6 +41,7 @@ setup(
     description='',
     long_description=open('README.md', 'r').read(),
     author='Jeroen Op \'t Eynde',
+    zip_safe=False,
     packages=find_packages('.'),
     include_package_data=True,
     install_requires=install_requires,

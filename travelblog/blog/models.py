@@ -10,6 +10,9 @@ class Location(models.Model):
     slug = models.SlugField(max_length=100)
     location = models.CharField(max_length=50, help_text='latitude,longitude')
 
+    def __str__(self):
+        return self.name
+
 
 class Article(models.Model):
     user = models.ForeignKey(User)
@@ -21,12 +24,20 @@ class Article(models.Model):
     summary = models.TextField(help_text='Short summary, may contain HTML')
     article = models.TextField(help_text='Actual article, also may contain HTML')
 
+    def __str__(self):
+        return '{0} published on {1}'.format(self.title, self.published)
+
 
 class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=200)
     mail = models.EmailField(max_length=200)
+    article = models.ForeignKey(Article, blank=True, null=True, on_delete=models.SET_NULL)
     comment = models.TextField()
+    hidden = models.BooleanField(default=False, help_text='Hide this comment without removing')
+
+    def __str__(self):
+        return '{0} commented on {1}'.format(self.name, self.comment)
 
 
 class Photo(SortableMixin):
@@ -36,6 +47,7 @@ class Photo(SortableMixin):
     article = models.ForeignKey(Article, blank=True, null=True, on_delete=models.SET_NULL)
     photo = models.ImageField(upload_to='travelblog/photos')
     display_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    hidden = models.BooleanField(default=False, help_text='Hide this photo without removing')
 
     class Meta:
         ordering = ['display_order']
