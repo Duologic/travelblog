@@ -1,3 +1,4 @@
 Django==1.10
 Pillow==3.3.1
 django-admin-sortable=2.0.19
+git+https://github.com/Duologic/django-google-maps@master#egg=django-google-maps

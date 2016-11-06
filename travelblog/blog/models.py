@@ -1,14 +1,20 @@
 from __future__ import unicode_literals
 
 from adminsortable.models import SortableMixin
+from django_google_maps import fields as map_fields
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+
+import os
 
 
 class Location(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=100)
-    location = models.CharField(max_length=50, help_text='latitude,longitude')
+    address = map_fields.AddressField(max_length=200)
+    geolocation = map_fields.GeoLocationField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -45,9 +51,12 @@ class Photo(SortableMixin):
     slug = models.SlugField(max_length=100)
     location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL)
     article = models.ForeignKey(Article, blank=True, null=True, on_delete=models.SET_NULL)
-    photo = models.ImageField(upload_to='travelblog/photos')
+    photo = models.ImageField(upload_to=os.path.join(settings.MEDIA_ROOT, 'photos'))
     display_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
     hidden = models.BooleanField(default=False, help_text='Hide this photo without removing')
 
     class Meta:
         ordering = ['display_order']
+
+    def __str__(self):
+        return 'Photo #{0}'.format(self.display_order)

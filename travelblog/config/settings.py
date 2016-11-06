@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'adminsortable',
+    'django_google_maps',
     'travelblog.blog',
 ]
 
